@@ -15,53 +15,19 @@ val logbackVersion = "1.1.3"
 val json4sVersion = "3.2.11"
 val scalatestVersion = "2.2.4"
 
+assemblyShadeRules in assembly := Seq(
+    ShadeRule.rename("org.json4s.**" -> "shaded.json4s.@1").inAll
+)
+
+dependencyOverrides ++= Set(
+    "com.fasterxml.jackson.core" % "jackson-databind" % "2.4.4" // upgrade jackson to 2.4.4 to be compatible with spark 1.6.0
+)
+
 libraryDependencies ++= Seq(
     "org.slf4j" % "slf4j-api" % slf4jVersion % "provided",
-    "net.databinder.dispatch" %% "dispatch-core" % dispatchVersion,
+    "net.databinder.dispatch" %% "dispatch-core" % dispatchVersion % "provided",
     "log4j" % "log4j" % log4jVersion % "provided",
     "ch.qos.logback" % "logback-classic" % logbackVersion % "provided",
     "org.json4s" %% "json4s-jackson" % json4sVersion,
     "org.scalatest" %% "scalatest" % scalatestVersion % "test"
 )
-
-// Plugins configuration
-
-publishTo := {
-    val nexus = "https://oss.sonatype.org/"
-    if (isSnapshot.value)
-        Some("snapshots" at nexus + "content/repositories/snapshots")
-    else
-        Some("releases" at nexus + "service/local/staging/deploy/maven2")
-}
-
-publishMavenStyle := true
-
-publishArtifact in Test := false
-
-pomIncludeRepository := { _ => false }
-
-pomExtra in Global := {
-    <url>https://github.com/storecove/rollbar-scala</url>
-    <licenses>
-        <license>
-            <name>Apache 2</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-    <scm>
-        <connection>scm:git@github.com:storecove/rollbar-scala.git</connection>
-        <developerConnection>scm:git:git@github.com:storecove/rollbar-scala.git</developerConnection>
-        <url>git@github.com:storecove/rollbar-scala</url>
-    </scm>
-    <developers>
-        <developer>
-            <id>acidghost</id>
-            <name>Andrea Jemmett</name>
-            <url>https://github.com/acidghost</url>
-            <organization>Storecove</organization>
-            <organizationUrl>http://www.storecove.com</organizationUrl>
-        </developer>
-    </developers>
-}
-
-net.virtualvoid.sbt.graph.Plugin.graphSettings
