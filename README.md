@@ -2,18 +2,26 @@
 [![Travis master branch](https://img.shields.io/travis/storecove/rollbar-scala/master.svg)](https://travis-ci.org/storecove/rollbar-scala) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/storecove/rollbar-scala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![GitHub release](https://img.shields.io/github/release/storecove/rollbar-scala.svg)](https://github.com/storecove/rollbar-scala/releases) [![GitHub issues](https://img.shields.io/github/issues/storecove/rollbar-scala.svg)](https://github.com/storecove/rollbar-scala/issues) [![GitHub license](https://img.shields.io/github/license/storecove/rollbar-scala.svg)](https://github.com/storecove/rollbar-scala/blob/master/LICENSE)
 
-Notifier library for integrating Scala apps with the Rollbar service.
+This Notifier library(forked from [rollbar-scala][1]) works well with Spark 1.6+.
+The rollbar-scala requires json4s version 3.2.11 while Spark still use a few years old version 3.2.10([JIRA][2]).
+The fork is to shade json4s_3.2.11 and upgrade jackson-databind to 2.4.4 to work with spark.
+
+[1]: https://github.com/storecove/rollbar-scala "Rollbar-scala"
+[2]: https://issues.apache.org/jira/browse/SPARK-15123 "SPARK-15123"
+
+## Build
+
+```
+sbt assembly
+```
 
 ## Installation
-You can find both scala 2.10 & 2.11 versions on the [Central Repository](http://search.maven.org/#search%7Cga%7C1%7Cg%3Acom.storecove).
-
-We are distributing a *non-fat* JAR, so you will need to include in your project also this library dependencies (which are few and lightweight!).
 
 For SBT:
 
 ```scala
 libraryDependencies ++= Seq(
-    "com.storecove" %% "rollbar-scala" % "1.0",
+    "com.storecove" %% "rollbar-scala" % "1.1-SNAPSHOT",
     "net.databinder.dispatch" %% "dispatch-core" % "0.11.2",
     "org.json4s" %% "json4s-jackson" % "3.2.11",
     "org.slf4j" % "slf4j-api" % "1.7.12"
