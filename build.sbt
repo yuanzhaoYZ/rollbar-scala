@@ -16,8 +16,19 @@ val json4sVersion = "3.2.11"
 val scalatestVersion = "2.2.4"
 
 assemblyShadeRules in assembly := Seq(
-    ShadeRule.rename("org.json4s.**" -> "shaded.json4s.@1").inAll
+    ShadeRule.rename("org.json4s.**" -> "shaded.json4s.@1").inAll,
+    ShadeRule.rename("com.fasterxml.**" -> "shaded.fasterxml.@1").inAll
 )
+
+assemblyMergeStrategy in assembly := {
+    case PathList("scala", xs@_*) => MergeStrategy.discard
+    case PathList("com","thoughtworks", xs@_*) => MergeStrategy.discard
+    case PathList(ps @ _*) if ps.last endsWith ".properties" => MergeStrategy.discard
+    case PathList(ps @ _*) if ps.last endsWith ".txt" => MergeStrategy.discard
+    case x =>
+        val oldStrategy = (assemblyMergeStrategy in assembly).value
+        oldStrategy(x)
+}
 
 dependencyOverrides ++= Set(
     "com.fasterxml.jackson.core" % "jackson-databind" % "2.4.4" // upgrade jackson to 2.4.4 to be compatible with spark 1.6.0
